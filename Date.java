@@ -62,19 +62,23 @@ public class Date {
     }
 
     public static void check_voters(String string) {
-        String[] names = string.split(" ");
-        if (!validation_Of_Names(names)) {
-            System.out.println("\u001B[31m"+"𝑼𝒔𝒆𝒓 𝒏𝒐𝒕 𝒇𝒐𝒖𝒏𝒅"+"\u001B[0m");
-        } else if (is_voter_Silenced(names[0])) {
-            //voter is silenced
-            System.out.println("\u001B[34m"+"\uD835\uDC97\uD835\uDC90\uD835\uDC95\uD835\uDC86\uD835\uDC93 \uD835\uDC8A\uD835\uDC94 \uD835\uDC94\uD835\uDC8A\uD835\uDC8D\uD835\uDC86\uD835\uDC8F\uD835\uDC84\uD835\uDC86\uD835\uDC85"+"\u001B[0m");
-        } else if (!is_vote_dead(names[1])) {
-            System.out.println("\u001B[31m\uD835\uDC97\uD835\uDC90\uD835\uDC95\uD835\uDC86\uD835\uDC86 \uD835\uDC82\uD835\uDC8D\uD835\uDC93\uD835\uDC86\uD835\uDC82\uD835\uDC85\uD835\uDC9A \uD835\uDC85\uD835\uDC86\uD835\uDC82\uD835\uDC85\u001B[0m");
+        if(string.length()<3){
+            System.out.println("this in not a true command!");
         }
-        else if (!is_vote_dead(names[0])) {
-            System.out.println("\u001B[31m\uD835\uDC97\uD835\uDC90\uD835\uDC95\uD835\uDC86\uD835\uDC93 \uD835\uDC82\uD835\uDC8D\uD835\uDC93\uD835\uDC86\uD835\uDC82\uD835\uDC85\uD835\uDC9A \uD835\uDC85\uD835\uDC86\uD835\uDC82\uD835\uDC85\u001B[0m");
-        } else {
-            ReturnPlayerFromName(names[1]).is_voted();
+        else {
+            String[] names = string.split(" ");
+            if (!validation_Of_Names(names)) {
+                System.out.println("\u001B[31m" + "𝑼𝒔𝒆𝒓 𝒏𝒐𝒕 𝒇𝒐𝒖𝒏𝒅" + "\u001B[0m");
+            } else if (is_voter_Silenced(names[0])) {
+                //voter is silenced
+                System.out.println("\u001B[34m" + "\uD835\uDC97\uD835\uDC90\uD835\uDC95\uD835\uDC86\uD835\uDC93 \uD835\uDC8A\uD835\uDC94 \uD835\uDC94\uD835\uDC8A\uD835\uDC8D\uD835\uDC86\uD835\uDC8F\uD835\uDC84\uD835\uDC86\uD835\uDC85" + "\u001B[0m");
+            } else if (!is_vote_dead(names[1])) {
+                System.out.println("\u001B[31m\uD835\uDC97\uD835\uDC90\uD835\uDC95\uD835\uDC86\uD835\uDC86 \uD835\uDC82\uD835\uDC8D\uD835\uDC93\uD835\uDC86\uD835\uDC82\uD835\uDC85\uD835\uDC9A \uD835\uDC85\uD835\uDC86\uD835\uDC82\uD835\uDC85\u001B[0m");
+            } else if (!is_vote_dead(names[0])) {
+                System.out.println("\u001B[31m\uD835\uDC97\uD835\uDC90\uD835\uDC95\uD835\uDC86\uD835\uDC93 \uD835\uDC82\uD835\uDC8D\uD835\uDC93\uD835\uDC86\uD835\uDC82\uD835\uDC85\uD835\uDC9A \uD835\uDC85\uD835\uDC86\uD835\uDC82\uD835\uDC85\u001B[0m");
+            } else {
+                ReturnPlayerFromName(names[1]).is_voted();
+            }
         }
     }
 
@@ -108,10 +112,14 @@ public class Date {
             System.out.println("\u001B[32m\uD835\uDC8F\uD835\uDC90\uD835\uDC83\uD835\uDC90\uD835\uDC85\uD835\uDC9A \uD835\uDC85\uD835\uDC8A\uD835\uDC86\uD835\uDC85\u001B[0m");
         } else if (goingToDie instanceof Joker) {
             //Joker won!
-            Joker.JokerWon();
+            Joker.JokerWon(goingToDie);
+        } else if (goingToDie instanceof informer) {
+            System.out.println(goingToDie.getName() + " was Killed");
+            goingToDie.setIs_alive(false);
+         //   informer.whatToInform(players, goingToDie, a);
         } else {
             goingToDie.setIs_alive(false);
-            System.out.println("\u001B[31m"+goingToDie.getName() + " " + "died"+"\u001B[0m");
+            System.out.println("\u001B[31m" + goingToDie.getName() + " " + "died" + "\u001B[0m");
         }
         for (Player value : players) {
             value.after_day();

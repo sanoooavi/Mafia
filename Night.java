@@ -94,6 +94,10 @@ public class Night {
     }
 
     public static boolean check_voters(String string) {
+        if(string.length()<3){
+            System.out.println("this in not a true command!");
+            return false;
+        }
         String[] names = string.split(" ");
         if (!validation_Of_Names(names)) {
             System.out.println("user not joined");
@@ -107,7 +111,7 @@ public class Night {
         } else if (!is_nightAwaken(names[0])) {
             System.out.println("user can not wake up during night");
             return false;
-        } else if (ReturnPlayerFromName(names[0]) instanceof mafia || ReturnPlayerFromName(names[0]) instanceof godfather || (ReturnPlayerFromName(names[0]) instanceof silencer && (((silencer) ReturnPlayerFromName(names[0])).getParticipation()>= 1))) {
+        } else if (ReturnPlayerFromName(names[0]) instanceof mafia || ReturnPlayerFromName(names[0]) instanceof godfather || (ReturnPlayerFromName(names[0]) instanceof silencer && (((silencer) ReturnPlayerFromName(names[0])).getParticipation() >= 1))) {
             return true;
         } else {
             question_and_answer(string);
@@ -123,10 +127,11 @@ public class Night {
         responder = ReturnPlayerFromName(str[1]);
         if (questioner instanceof silencer) {
             ((silencer) questioner).increaseParticipation();
-            silencer.MakeSilence(questioner, responder);
+            questioner.MakeSth(questioner, responder);
         } else if (questioner instanceof doctor && questioner.getHas_voted_atNight() == 0) {
-            questioner.Has_voted_atNight();
-            responder.setHas_additional_life();
+            questioner.MakeSth(questioner, responder);
+            //questioner.Has_voted_atNight();
+           // responder.setHas_additional_life();
         } else if (questioner instanceof detective) {
             if (questioner.getHas_voted_atNight() == 0) {
                 questioner.Has_voted_atNight();
@@ -142,14 +147,15 @@ public class Night {
         }
     }
 
-    public static ArrayList<Player> getKickedOut(ArrayList<String> night_voters) {
+    public static ArrayList<Player> getKickedOut(ArrayList<String> night_voters,Player[]players) {
+     //   if (night_voters ==null) {
+         //   return null;
+        //}
         ArrayList<Player> a = new ArrayList<>();
+        ArrayList<Player> c = new ArrayList<>();
         ArrayList<String> b = new ArrayList<>();
         for (int i = night_voters.size() - 1; i >= 0; i--) {
             String[] names = night_voters.get(i).split(" ");
-           // if (ReturnPlayerFromName(names[0]) instanceof silencer) {
-               // b.add(names[1]);
-           // }
             if (ReturnPlayerFromName(names[0]).getHas_voted_atNight() == 0) {
                 ReturnPlayerFromName(names[0]).Has_voted_atNight();
                 b.add(names[1]);
@@ -160,20 +166,43 @@ public class Night {
         for (int i = 0; i < b.size(); i++) {
             a.add(ReturnPlayerFromName(b.get(i)));
         }
-        return a;
+        for (int i=0;i<players.length;i++){
+          for(int j=0;j<a.size() ;j++){
+             if(players[i].getName().equals(a.get(j).getName())){
+                 players[i].is_voted();
+             }
+           }
+        }
+        for (int i=0;i< players.length;i++){
+            if(players[i].getVotes()>=1)
+            c.add(players[i]);
+        }
+        return c;
     }
 
-    public static void ReportOFNight(Player[] players, ArrayList<Player> IntentionalCase) {
+    public static void TriedToKill(ArrayList<Player>a,String nameofDead) {
+        String str;
+        if (a.size() != 0) {
+            str = "mafia tried to kill ";
+            for (int i = 0; i < a.size(); i++)
+                if (check_non_repeated_name(a, i))
+                    if(!(a.get(i)instanceof bulletproof && nameofDead==null ))
+                    str += a.get(i).getName() + " ";
+        } else {
+            str = "noBody voted for someone last night";
+        }
+        if(!str.equals("mafia tried to kill ")){
+            System.out.println(str);
+        }
+    }
+
+    public static String ReportOFNightName(Player[] players, ArrayList<Player> IntentionalCase) {
         //IntentionalCase is an array list which have all the people who were voted
-        String str = "";
+        String nameOfDeath = null;
+        //IntentionalCase is an array list which have all the people who were voted
         int count = IntentionalCase.size();//numberOfIntentional
         if (IntentionalCase.size() != 0) {
             bubbleSort(IntentionalCase);
-            str = "mafia tried to kill ";
-            for (int i = 0; i < count; i++) {
-                if (check_non_repeated_name(IntentionalCase, i))
-                    str += IntentionalCase.get(i).getName() + " ";
-            }
             int countOfMaxVotes = 0;
             for (int i = 0; i < count; i++) {
                 if (IntentionalCase.get(i).getVotes() == IntentionalCase.get(count - 1).getVotes()) {
@@ -182,51 +211,58 @@ public class Night {
             }
             if (countOfMaxVotes == 1) {
                 if (IntentionalCase.get(count - 1) instanceof bulletproof) {
-                    str = bulletproof.DealingWithOneSelected(str, IntentionalCase.get(count - 1));
-                } else {
-                    if (IntentionalCase.get(count - 1).getHas_additional_life() == 0) {
-                        str += "\n" + IntentionalCase.get(count - 1).getName() + " was killed";
-                        ReturnPlayerFromName(IntentionalCase.get(count - 1).getName()).setIs_alive(false);
-                    } else {
-                        str += "\nno body died last night";
+                    nameOfDeath = bulletproof.DealingWithOneSelected(IntentionalCase.get(count - 1));
+                } else if (IntentionalCase.get(count - 1).getHas_additional_life() == 0) {
+                    nameOfDeath = IntentionalCase.get(count - 1).getName();
+                    IntentionalCase.get(count - 1).setIs_alive(false);
+                    if (IntentionalCase.get(count - 1) instanceof informer) {
+                        informer.whatToInform(players, IntentionalCase.get(count - 1), IntentionalCase);
                     }
                 }
             } else if (countOfMaxVotes == 2) {
                 if (IntentionalCase.get(count - 1) instanceof bulletproof && IntentionalCase.get(count - 2) instanceof bulletproof) {
-                    str = bulletproof.DealingWithTwoSelected(str, IntentionalCase.get(count - 1), IntentionalCase.get(count - 2));
+                    nameOfDeath = bulletproof.DealingWithSelected(IntentionalCase.get(count - 1), IntentionalCase.get(count - 2));
                 } else if ((IntentionalCase.get(count - 1) instanceof bulletproof && !(IntentionalCase.get(count - 2) instanceof bulletproof)) || (!(IntentionalCase.get(count - 1) instanceof bulletproof) && IntentionalCase.get(count - 2) instanceof bulletproof)) {
-                    str = bulletproof.DealingWithTwoSelected_OneBullet(str, IntentionalCase.get(count - 1), IntentionalCase.get(count - 2));
+                    nameOfDeath = bulletproof.DealingWithTwoSelected_OneBullet(IntentionalCase.get(count - 1), IntentionalCase.get(count - 2));
                 } else {
                     if (IntentionalCase.get(count - 1).getHas_additional_life() == 0 && IntentionalCase.get(count - 2).getHas_additional_life() == 1) {
-                        str += "\n" + IntentionalCase.get(count - 1).getName() + " was killed";
-                        ReturnPlayerFromName(IntentionalCase.get(count - 1).getName()).setIs_alive(false);
+                        nameOfDeath = IntentionalCase.get(count - 1).getName();
+                        IntentionalCase.get(count - 1).setIs_alive(false);
+                        if (IntentionalCase.get(count - 1) instanceof informer) {
+                            informer.whatToInform(players, IntentionalCase.get(count - 1), IntentionalCase);
+                        }
                     } else if (IntentionalCase.get(count - 1).getHas_additional_life() == 1 && IntentionalCase.get(count - 2).getHas_additional_life() == 0) {
-                        str += "\n" + IntentionalCase.get(count - 2).getName() + " was killed";
-                        ReturnPlayerFromName(IntentionalCase.get(count - 2).getName()).setIs_alive(false);
-                    } else if (IntentionalCase.get(count - 1).getHas_additional_life() == 0 && IntentionalCase.get(count - 2).getHas_additional_life() == 0) {
-                        str += "\nno body died last night";
+                        nameOfDeath = IntentionalCase.get(count - 2).getName();
+                        IntentionalCase.get(count - 2).setIs_alive(false);
+                        if (IntentionalCase.get(count - 2) instanceof informer) {
+                            informer.whatToInform(players, IntentionalCase.get(count - 2), IntentionalCase);
+                        }
                     }
                 }
-            } else if (countOfMaxVotes > 2) {
-                str += "\nno body died last night";
             }
-        } else {
-            str += "no body died last night";
         }
+        return nameOfDeath;
+    }
+
+    public static void IsSilence(Player[] players) {
+        String str = "";
         for (int i = 0; i < players.length; i++) {
             if (players[i].isIs_silence()) {
-                str += "\nSilenced " + players[i].getName();
+                str += "Silenced " + players[i].getName();
             }
         }
-        System.out.println(str);
+        if (!str.equals(""))
+            System.out.println(str);
+    }
+
+    public static void AfterNight(Player[] players) {
         for (int i = 0; i < players.length; i++) {
-            if(players[i] instanceof silencer){
+            if (players[i] instanceof silencer) {
                 ((silencer) players[i]).resetParticipation();
             }
             players[i].after_Night();
             players[i].resetHas_additional_life();
             players[i].after_day();
-
         }
     }
 }

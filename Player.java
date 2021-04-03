@@ -78,5 +78,6 @@ public abstract class Player {
     public void after_Night() {
         this.has_voted_atNight = 0;
     }
-
+    public void MakeSth(Player a, Player b){
+    }
 }

@@ -13,39 +13,35 @@ public class bulletproof extends Player {
         this.hasShield--;
     }
 
-    public static String DealingWithOneSelected(String str, Player player) {
+    public static String DealingWithOneSelected(Player player) {
+        String str =null;
         if (player.getHas_additional_life() == 0 && ((bulletproof) player).getHasShield() == 1) {
-            str += "\nno body died last night";
             ((bulletproof) player).reduceShield();
         } else if (player.getHas_additional_life() == 0 && ((bulletproof) player).getHasShield() == 0) {
-            str += "\n" + player.getName() + " was killed";
+            str = player.getName();
             player.setIs_alive(false);
-        } else if (player.getHas_additional_life() == 1) {
-            str += "\nno body died last night";
         }
         return str;
     }
 
-    public static String DealingWithTwoSelected(String str, Player player1, Player player2) {
+    public static String DealingWithSelected(Player player1, Player player2) {
+        String str =null;
         if (player1.getHas_additional_life() == 1 && player2.getHas_additional_life() == 0 && ((bulletproof) player1).getHasShield() == 1 && ((bulletproof) player2).getHasShield() == 1) {
             ((bulletproof) player2).reduceShield();
-            str += "\nno body died last night";
         } else if (player1.getHas_additional_life() == 0 && player2.getHas_additional_life() == 1 && ((bulletproof) player1).getHasShield() == 1 && ((bulletproof) player2).getHasShield() == 1) {
             ((bulletproof) player1).reduceShield();
-            str += "\nno body died last night";
         } else if (player1.getHas_additional_life() == 1 && player2.getHas_additional_life() == 0 && ((bulletproof) player1).getHasShield() == 0 && ((bulletproof) player2).getHasShield() == 0) {
-            str += "\n" + player2.getName() + " was killed";
+            str = player2.getName();
             player2.setIs_alive(false);
         } else if (player1.getHas_additional_life() == 0 && player2.getHas_additional_life() == 1 && ((bulletproof) player1).getHasShield() == 0 && ((bulletproof) player2).getHasShield() == 0) {
-            str += "\n" + player1.getName() + " was killed";
+            str = player1.getName();
             player1.setIs_alive(false);
-        } else {
-            str += "\nno body died last night";
         }
         return str;
     }
 
-    public static String DealingWithTwoSelected_OneBullet(String str, Player player1, Player player2) {
+    public static String DealingWithTwoSelected_OneBullet(Player player1, Player player2) {
+        String str =null;
         Player Bull = null;
         Player non_Bull = null;
         if (player1 instanceof bulletproof) {
@@ -56,16 +52,18 @@ public class bulletproof extends Player {
             non_Bull = player1;
         }
         if (Bull.getHas_additional_life() == 0 && non_Bull.getHas_additional_life() == 0 && ((bulletproof) Bull).getHasShield() == 1) {
-            str += "\n" + non_Bull.getName() + " was killed";
+            str = non_Bull.getName();
             non_Bull.setIs_alive(false);
         } else if (Bull.getHas_additional_life() == 0 && non_Bull.getHas_additional_life() == 1 && ((bulletproof) Bull).getHasShield() == 0) {
-            str += "\n" + Bull.getName() + " was killed";
+            str = Bull.getName();
             Bull.setIs_alive(false);
         } else if (Bull.getHas_additional_life() == 1 && non_Bull.getHas_additional_life() == 0 && ((bulletproof) Bull).getHasShield() == 0) {
-            str += "\n" + non_Bull.getName() + " was killed";
+            str = non_Bull.getName();
             non_Bull.setIs_alive(false);
-        } else {
-            str += "\nno body died last night";
+        }
+        else if (Bull.getHas_additional_life() == 1 && non_Bull.getHas_additional_life() == 0 && ((bulletproof) Bull).getHasShield() == 1) {
+            str = non_Bull.getName();
+            non_Bull.setIs_alive(false);
         }
         return str;
     }

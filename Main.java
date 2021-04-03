@@ -7,7 +7,7 @@ public class Main {
     public static final String ANSI_PURPLE = "\u001B[35m";
 
     public static boolean check_acts(String string) {
-        if (string.equals("Joker") || string.equals("villager") || string.equals("detective") || string.equals("doctor") || string.equals("bulletproof") || string.equals("mafia") || string.equals("godfather") || string.equals("silencer"))
+        if (string.equals("Joker") || string.equals("villager") || string.equals("detective") || string.equals("doctor") || string.equals("bulletproof") || string.equals("mafia") || string.equals("godfather") || string.equals("silencer") || string.equals("informer"))
             return true;
         return false;
     }
@@ -24,19 +24,16 @@ public class Main {
         String[] check = string.split(" ");
         if (!check[0].equals("assign_role")) {
             return false;
-        }
-        if (!check_names(check[1], names) && !check_acts(check[2])) {
+        } else if (!check_names(check[1], names) && !check_acts(check[2])) {
             //user not found
             System.out.println("\u001B[31m" + "\uD835\uDC2E\uD835\uDC2C\uD835\uDC1E\uD835\uDC2B \uD835\uDC27\uD835\uDC28\uD835\uDC2D \uD835\uDC1F\uD835\uDC28\uD835\uDC2E\uD835\uDC27\uD835\uDC1D" + "\u001B[0m");
             System.out.println("\u001B[31m" + "role not found");
             return false;
-        }
-        if (!check_names(check[1], names)) {
+        } else if (!check_names(check[1], names)) {
             //user not found
             System.out.println("\u001B[31m" + "\uD835\uDC2E\uD835\uDC2C\uD835\uDC1E\uD835\uDC2B \uD835\uDC27\uD835\uDC28\uD835\uDC2D \uD835\uDC1F\uD835\uDC28\uD835\uDC2E\uD835\uDC27\uD835\uDC1D" + "\u001B[0m");
             return false;
-        }
-        if (!check_acts(check[2])) {
+        } else if (!check_acts(check[2])) {
             System.out.println("\u001B[31m" + "role not found" + "\u001B[0m");
             return false;
         }
@@ -46,9 +43,15 @@ public class Main {
 
     public static Player give_acts(String name, String act) {
         if (act.equals("Joker")) {
-            return new Joker(name, "Joker", true, false, 0, 0);
+            if (Joker.numOfJokers == 0) {
+                return new Joker(name, "Joker", true, false, 0, 0);
+            } else {
+                System.out.println("This game can not have more than one Joker");
+            }
         } else if (act.equals("villager")) {
-            return new Villager(name, "villager", true, false, 0, 0);
+            return new villager(name, "villager", true, false, 0, 0);
+        } else if (act.equals("informer")) {
+            return new informer(name, "informer", true, false, 0, 0);
         } else if (act.equals("detective")) {
             return new detective(name, "detective", true, false, 0, 0);
         } else if (act.equals("doctor")) {
@@ -79,13 +82,14 @@ public class Main {
             for (int i = 0; i < players.length; i++) {
                 System.out.println(players[i].getName() + ":" + " " + players[i].getAct());
             }
-            System.out.println("\n" + "Ready? Set! Go.");
+            System.out.println("Ready? Set! Go.");
         }
         return true;
     }
-    public static boolean ReturnIfHasBeenInvolved(String name,int counter,Player []players){
-        for (int i=0;i<counter;i++){
-            if(name.equals(players[i].getName()))
+
+    public static boolean ReturnIfHasBeenInvolved(String name, int counter, Player[] players) {
+        for (int i = 0; i < counter; i++) {
+            if (name.equals(players[i].getName()))
                 return false;
         }
         return true;
@@ -95,7 +99,7 @@ public class Main {
         int CounterOFMafias = 0;
 
         for (int i = 0; i < players.length; i++) {
-            if ((players[i] instanceof mafia || players[i] instanceof godfather||players[i] instanceof silencer) && players[i].isIs_alive()) {
+            if ((players[i] instanceof mafia || players[i] instanceof godfather || players[i] instanceof silencer) && players[i].isIs_alive()) {
                 CounterOFMafias++;
             } else if (players[i] == null) {
                 return 0;
@@ -107,7 +111,7 @@ public class Main {
     public static int giveNumbersOFVillagers(Player[] players) {
         int CounterOFVillagers = 0;
         for (int i = 0; i < players.length; i++) {
-            if ((players[i] instanceof Villager ||players[i] instanceof detective||players[i] instanceof doctor||players[i] instanceof bulletproof)&& players[i].isIs_alive()) {
+            if ((players[i] instanceof villager || players[i] instanceof detective || players[i] instanceof doctor || players[i] instanceof bulletproof || players[i] instanceof informer) && players[i].isIs_alive()) {
                 CounterOFVillagers++;
             } else if (players[i] == null) {
                 return 0;
@@ -132,6 +136,15 @@ public class Main {
             System.out.println("\u001B[32m" + "\uD83C\uDD85\uD83C\uDD78\uD83C\uDD7B\uD83C\uDD7B\uD83C\uDD70\uD83C\uDD76\uD83C\uDD74\uD83C\uDD81\uD83C\uDD82 \uD83C\uDD86\uD83C\uDD7E\uD83C\uDD7D❗" + "\u001B[0m");
             System.exit(0);
         }
+    }
+
+    public static Player ReturnPlayerFromName(String name, Player[] player) {
+        for (int i = 0; i < player.length; i++) {
+            if (player[i].getName().equals(name)) {
+                return player[i];
+            }
+        }
+        return null;
     }
 
     public static void namak() {
@@ -164,17 +177,20 @@ public class Main {
         while (scanner.hasNextLine()) {
             str = scanner.nextLine();
             String[] array = str.split(" ");
-            if (array[0].equals("create_game") && array.length != 1) {
+            if (array[0].equals("create_game")) {
                 if (countOfCreateGames != 0) {
                     System.out.println("game has already started");
                     continue;
                 } else {
-                    countOfCreateGames++;
-                    names = str.substring(12).split(" ");
-                    players = new Player[names.length];
+                    if (array.length > 1) {
+                        countOfCreateGames++;
+                        names = str.substring(12).split(" ");
+                        players = new Player[names.length];
+                    }
                 }
 
             } else if (array[0].equals("assign_role")) {
+                int nmd = 0;
                 if (countOfCreateGames == 0) {
                     System.out.println("no game created");
                     continue;
@@ -182,8 +198,17 @@ public class Main {
                     // while(!check_assign(str, players)){
                     //  str = scanner.nextLine();
                     // }
-                    if (check_assign(str, names)) {
-                        players[counter++] = give_acts(array[1], array[2]);
+                    if (array.length == 1 || array.length == 2) {
+                        System.out.println("assign_role without name and role doesn't mean!!!");
+                    } else if (check_assign(str, names)) {
+                        for (int i = 0; i < counter; i++) {
+                            if (players[i].getName().equals(array[1])) {
+                                nmd++;
+                                System.out.println("this guy has an act already!");
+                            }
+                        }
+                        if (nmd == 0)
+                            players[counter++] = give_acts(array[1], array[2]);
                     }
                 }
             } else if (array[0].equals("start_game")) {
@@ -198,30 +223,46 @@ public class Main {
                         str = scanner.nextLine();
                         String[] array2 = str.split(" ");
                         if (check_assign(str, names)) {
-                            if (ReturnIfHasBeenInvolved(array2[1],counter,players)) {
+                            if (ReturnIfHasBeenInvolved(array2[1], counter, players)) {
                                 players[counter++] = give_acts(array2[1], array2[2]);
                             } else {
                                 System.out.println("This person has already been involved");
                             }
                         }
                     }
+                    String[] swapp = null;
                     while (true) {
-                        isEndOfTheGame(players);
                         new Date(players);
-                        if (night_voters != null) {
-                            Night.ReportOFNight(players, Night.getKickedOut(night_voters));
-                        }
                         System.out.println("Day" + " " + Date.day_counter);
+                        if (night_voters != null) {
+                            String name = Night.ReportOFNightName(players, Night.getKickedOut(night_voters, players));
+                            Night.TriedToKill(Night.getKickedOut(night_voters, players), name);
+                            if (name != null) {
+                                System.out.println(name + " was killed");
+                            } else {
+                                System.out.println("nobody died last night");
+                            }
+                        }
+                        Night.IsSilence(players);
+                        if (swapp != null) {
+                            System.out.println(swapp[0] + " swapped characters with " + swapp[1]);
+                        }
+                        Night.AfterNight(players);
+                        isEndOfTheGame(players);
                         while (scanner.hasNextLine()) {
                             str = scanner.nextLine();
-                            if (str.equals("end_vote")) {
+                            if (str.contains("end_vote")) {
                                 break;
                             }
-                            if (str.equals("get_game_state")) {
+                            if (str.contains("get_game_state")) {
                                 giveReport(players);
                                 continue;
                             }
-                            if (str.equals("start_game") || str.equals("create_game")) {
+                            if (str.contains("swap_character")) {
+                                System.out.println("voting in progress");
+                                continue;
+                            }
+                            if (str.contains("start_game") || str.contains("create_game")) {
                                 System.out.println("game has already started");
                                 continue;
                             }
@@ -237,20 +278,35 @@ public class Main {
                         night_voters = new ArrayList<>();
                         while (scanner.hasNextLine()) {
                             str = scanner.nextLine();
-                            if (str.equals("end_night")) {
+                            if (str.contains("end_night")) {
                                 break;
                             }
-                            if (str.equals("get_game_state")) {
+                            if (str.contains("get_game_state")) {
                                 giveReport(players);
                                 continue;
                             }
-                            if (str.equals("start_game") || str.equals("create_game")) {
+                            if (str.contains("start_game") || str.contains("create_game")) {
                                 System.out.println("game has already started");
+                                continue;
+                            }
+                            if (str.contains("swap_character")) {
+                                System.out.println("can’t swap before end of night");
                                 continue;
                             }
                             if (Night.check_voters(str)) {
                                 night_voters.add(str);
                             }
+                        }
+                        //swap_part
+                        String swapper = scanner.nextLine();
+                        String[] swap = swapper.split(" ");
+                        if (!(ReturnPlayerFromName(swap[1], players).isIs_alive()) || !(ReturnPlayerFromName(swap[2], players)).isIs_alive()) {
+                            System.out.println("user is dead");
+                        } else {
+                            Swap.swapping(ReturnPlayerFromName(swap[1], players), ReturnPlayerFromName(swap[2], players));
+                            swapp = new String[2];
+                            swapp[0] = swap[1];
+                            swapp[1] = swap[2];
                         }
                     }
                 }
