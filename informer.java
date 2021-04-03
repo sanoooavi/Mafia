@@ -25,6 +25,7 @@ public class informer extends Player{
                 return a.get(n);
         return null;
     }
+    //this method gives a fact randomly when the informer dies
     public static void whatToInform(Player[]players, Player informer, ArrayList<Player> a){
         System.out.println(informer.getName()+" was an informer");
         Random rand = new Random();

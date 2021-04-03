@@ -1,4 +1,5 @@
 public class Joker extends Player{
+    //used to not let make more than a Joker
     public static int numOfJokers=0;
     public Joker(String name, String act, boolean is_alive, boolean is_silence, int votes, int has_additional_life) {
         super(name, act, is_alive, is_silence, votes, has_additional_life);
@@ -6,6 +7,7 @@ public class Joker extends Player{
     {
         numOfJokers++;
     }
+    //a method used when you kill the joker in the day
     public static void JokerWon(Player a) {
             a.setIs_alive(false);
             System.out.println("\u001B[31m" + "You killed The Joker❗" + "\u001B[0m");

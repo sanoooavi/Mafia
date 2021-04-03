@@ -4,6 +4,7 @@ public class silencer extends Player {
         super(name, act, is_alive, is_silence, votes, has_additional_life);
     }
        @Override
+       //this method silences the first person and increase the silencer participation
     public  void MakeSth(Player Silencer, Player Is_silent) {
         if (((silencer)Silencer).getParticipation() == 1) {
             Is_silent.setIs_silence(true);

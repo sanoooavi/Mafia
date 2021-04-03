@@ -66,7 +66,7 @@ public abstract class Player {
     public void is_voted() {
         this.votes++;
     }
-
+//After the voting is over, we return everyone to their original state
     public void after_day() {
         this.votes = 0;
     }

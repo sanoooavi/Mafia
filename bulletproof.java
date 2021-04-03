@@ -12,7 +12,7 @@ public class bulletproof extends Player {
     public void reduceShield() {
         this.hasShield--;
     }
-
+//if the person who has the most votes is a bulletproof we should know the condition
     public static String DealingWithOneSelected(Player player) {
         String str =null;
         if (player.getHas_additional_life() == 0 && ((bulletproof) player).getHasShield() == 1) {
@@ -23,7 +23,7 @@ public class bulletproof extends Player {
         }
         return str;
     }
-
+//not needed through this game but maybe there are 2 bulletproofs who has the same most votes
     public static String DealingWithSelected(Player player1, Player player2) {
         String str =null;
         if (player1.getHas_additional_life() == 1 && player2.getHas_additional_life() == 0 && ((bulletproof) player1).getHasShield() == 1 && ((bulletproof) player2).getHasShield() == 1) {
@@ -39,7 +39,7 @@ public class bulletproof extends Player {
         }
         return str;
     }
-
+//and maybe a bullet proof and another person (not a bulletproof)hast the max votes
     public static String DealingWithTwoSelected_OneBullet(Player player1, Player player2) {
         String str =null;
         Player Bull = null;

@@ -2,16 +2,17 @@ import java.util.*;
 import java.util.Scanner;
 
 public class Main {
+    //just to colour some sentences
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_PURPLE = "\u001B[35m";
-
+//check_act method checks if this act is part of the game or not
     public static boolean check_acts(String string) {
         if (string.equals("Joker") || string.equals("villager") || string.equals("detective") || string.equals("doctor") || string.equals("bulletproof") || string.equals("mafia") || string.equals("godfather") || string.equals("silencer") || string.equals("informer"))
             return true;
         return false;
     }
-
+//this method is used to see if  the name given  is in the memory of the players' names
     public static boolean check_names(String name, String[] names) {
         for (int i = 0; i < names.length; i++) {
             if (names[i].equals(name))
@@ -19,7 +20,7 @@ public class Main {
         }
         return false;
     }
-
+// this method checks if the assigning part is working or not?for example if there is a role or not!and both upper methods are used here
     public static boolean check_assign(String string, String[] names) {
         String[] check = string.split(" ");
         if (!check[0].equals("assign_role")) {
@@ -40,13 +41,11 @@ public class Main {
         return true;
     }
 
-
+//this method news our players and give them all  information they need
     public static Player give_acts(String name, String act) {
         if (act.equals("Joker")) {
             if (Joker.numOfJokers == 0) {
                 return new Joker(name, "Joker", true, false, 0, 0);
-            } else {
-                System.out.println("This game can not have more than one Joker");
             }
         } else if (act.equals("villager")) {
             return new villager(name, "villager", true, false, 0, 0);
@@ -67,7 +66,7 @@ public class Main {
         }
         return null;
     }
-
+//check if we can start the game or not and then give the full info
     public static boolean start_game(Player[] players) {
         int nullish = 0;
         for (int i = 0; i < players.length; i++) {
@@ -86,7 +85,7 @@ public class Main {
         }
         return true;
     }
-
+//to see if this person had an act before or not
     public static boolean ReturnIfHasBeenInvolved(String name, int counter, Player[] players) {
         for (int i = 0; i < counter; i++) {
             if (name.equals(players[i].getName()))
@@ -94,7 +93,7 @@ public class Main {
         }
         return true;
     }
-
+//to give number of mafias
     public static int giveNumbersOFMafias(Player[] players) {
         int CounterOFMafias = 0;
 
@@ -107,7 +106,7 @@ public class Main {
         }
         return CounterOFMafias;
     }
-
+//to give number of villagers
     public static int giveNumbersOFVillagers(Player[] players) {
         int CounterOFVillagers = 0;
         for (int i = 0; i < players.length; i++) {
@@ -119,13 +118,13 @@ public class Main {
         }
         return CounterOFVillagers;
     }
-
+//shows numbers of villagers and mafias
     public static void giveReport(Player[] players) {
         int NumsOFMafias = giveNumbersOFMafias(players);
         int NumsOFVillagers = giveNumbersOFVillagers(players);
         System.out.println("Mafia = " + NumsOFMafias + "\n" + "Villager = " + NumsOFVillagers);
     }
-
+//check about the game situation and shows the winner
     public static void isEndOfTheGame(Player[] players) {
         int NumsOFMafias = giveNumbersOFMafias(players);
         int NumsOFVillagers = giveNumbersOFVillagers(players);
@@ -137,7 +136,7 @@ public class Main {
             System.exit(0);
         }
     }
-
+//return the player if you give a name
     public static Player ReturnPlayerFromName(String name, Player[] player) {
         for (int i = 0; i < player.length; i++) {
             if (player[i].getName().equals(name)) {
@@ -207,8 +206,14 @@ public class Main {
                                 System.out.println("this guy has an act already!");
                             }
                         }
-                        if (nmd == 0)
-                            players[counter++] = give_acts(array[1], array[2]);
+                        if (nmd == 0) {
+                            if(array[2].equals("Joker")&& Joker.numOfJokers!=0){
+                                System.out.println("This game can not have more than one Joker");
+                            }
+                            else {
+                                players[counter++] = give_acts(array[1], array[2]);
+                            }
+                        }
                     }
                 }
             } else if (array[0].equals("start_game")) {
@@ -302,6 +307,7 @@ public class Main {
                         String[] swap = swapper.split(" ");
                         if (!(ReturnPlayerFromName(swap[1], players).isIs_alive()) || !(ReturnPlayerFromName(swap[2], players)).isIs_alive()) {
                             System.out.println("user is dead");
+                            swapp=null;
                         } else {
                             Swap.swapping(ReturnPlayerFromName(swap[1], players), ReturnPlayerFromName(swap[2], players));
                             swapp = new String[2];
@@ -322,3 +328,4 @@ public class Main {
         }
     }
 }
+//https://github.com/sanoooavi/Mafia/commit/8d9aa66d45ae01aaedb7ac99bba6730f5e17134d;

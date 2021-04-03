@@ -14,11 +14,10 @@ public class Date {
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_RESET = "\u001B[0m";
 
-    //
     public Date(Player[] player) {
         this.player = player;
     }
-
+//this method checks if this name is valid or not
     public static boolean validation_Of_Names(String[] name) {
         for (int i = 0; i < player.length; i++) {
             if (player[i].getName().equals(name[0])) {
@@ -31,7 +30,7 @@ public class Date {
         }
         return false;
     }
-
+//to check if the users are dead or not
     public static boolean is_vote_dead(String name) {
         for (int i = 0; i < player.length; i++) {
             if (player[i].getName().equals(name)) {
@@ -41,7 +40,7 @@ public class Date {
         }
         return false;
     }
-
+//to check if the person who is giving order is silence or not
     public static boolean is_voter_Silenced(String name) {
         for (int i = 0; i < player.length; i++) {
             if (player[i].getName().equals(name)) {
@@ -51,7 +50,7 @@ public class Date {
         }
         return false;
     }
-
+//you can give the gamer's name and get the player of it
     public static Player ReturnPlayerFromName(String name) {
         for (int i = 0; i < player.length; i++) {
             if (player[i].getName().equals(name)) {
@@ -60,12 +59,11 @@ public class Date {
         }
         return null;
     }
-
+//to check if the command we are giving is valid or not
     public static void check_voters(String string) {
-        if(string.length()<3){
+        if (string.length() < 3) {
             System.out.println("this in not a true command!");
-        }
-        else {
+        } else {
             String[] names = string.split(" ");
             if (!validation_Of_Names(names)) {
                 System.out.println("\u001B[31m" + "𝑼𝒔𝒆𝒓 𝒏𝒐𝒕 𝒇𝒐𝒖𝒏𝒅" + "\u001B[0m");
@@ -81,22 +79,23 @@ public class Date {
             }
         }
     }
-
+//when the day finishes we delete the person who eas silenced during the day
     public static void delete_Silence() {
         for (int i = 0; i < player.length; i++) {
             player[i].setIs_silence(false);
         }
     }
-
+//deletes all the votes for gamers
     public static void deleteVotedPeopleFromLastDay(Player[] players) {
         for (Player value : players) {
             value.after_day();
         }
     }
-
+//this method gives a whole report after the ends of a day
     public static void ReportOFDay(Player[] players) {
         Player goingToDie = null;
         int valueOfVotes[] = new int[players.length];
+        //value of votes is an array which have all the votes by order
         for (int i = 0; i < players.length; i++) {
             valueOfVotes[i] = players[i].getVotes();
         }
@@ -116,7 +115,7 @@ public class Date {
         } else if (goingToDie instanceof informer) {
             System.out.println(goingToDie.getName() + " was Killed");
             goingToDie.setIs_alive(false);
-         //   informer.whatToInform(players, goingToDie, a);
+            //   informer.whatToInform(players, goingToDie, a);
         } else {
             goingToDie.setIs_alive(false);
             System.out.println("\u001B[31m" + goingToDie.getName() + " " + "died" + "\u001B[0m");

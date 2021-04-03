@@ -9,11 +9,11 @@ public class Night {
     public Night(Player[] player) {
         this.player = player;
     }
-
+//used to give the number of night
     {
         night_counter++;
     }
-
+//at the first of night we print all the awakens
     public static void givNamesOfAwakens(Player[] player) {
         for (int i = 0; i < player.length; i++) {
             if ((player[i] instanceof mafia || player[i] instanceof detective || player[i] instanceof doctor || player[i] instanceof godfather || player[i] instanceof silencer) && player[i].isIs_alive()) {
@@ -21,7 +21,7 @@ public class Night {
             }
         }
     }
-
+//again to check if the name is valid or not(also this is used for the command i mean both names)
     public static boolean validation_Of_Names(String[] name) {
         for (int i = 0; i < player.length; i++) {
             if (player[i].getName().equals(name[0])) {
@@ -33,7 +33,7 @@ public class Night {
         }
         return false;
     }
-
+//just to check if a name is valid or not
     public static boolean validation_Of_Names(String name) {
         for (int i = 0; i < player.length; i++) {
             if (player[i].getName().equals(name)) {
@@ -42,7 +42,7 @@ public class Night {
         }
         return false;
     }
-
+//you can give a name and this method returns it's player
     public static Player ReturnPlayerFromName(String name) {
         for (int i = 0; i < player.length; i++) {
             if (player[i].getName().equals(name)) {
@@ -51,7 +51,7 @@ public class Night {
         }
         return null;
     }
-
+//if you command a name which is not a night awaken this method comes to help
     public static boolean is_nightAwaken(String name) {
         for (int i = 0; i < player.length; i++) {
             if (player[i].getName().equals(name)) {
@@ -61,7 +61,7 @@ public class Night {
         }
         return false;
     }
-
+//if the person is dead or not
     public static boolean is_vote_dead(String name) {
         for (int i = 0; i < player.length; i++) {
             if (player[i].getName().equals(name)) {
@@ -71,7 +71,7 @@ public class Night {
         }
         return false;
     }
-
+//this method is used while printing the people who were assassination case
     public static boolean check_non_repeated_name(ArrayList<Player> IntentionalCase, int i) {
         for (int j = 0; j < i; j++) {
             if (IntentionalCase.get(i).getName().equals(IntentionalCase.get(j).getName()))
@@ -79,7 +79,7 @@ public class Night {
         }
         return true;
     }
-
+//to sort the array list by the votes they have
     public static void bubbleSort(ArrayList<Player> IntentionalCase) {
         for (int i = 1; i < IntentionalCase.size(); i++) {
             for (int j = 0; j < IntentionalCase.size() - i; j++) {
@@ -92,7 +92,7 @@ public class Night {
             }
         }
     }
-
+//to check if the command we are giving at night is valid or not
     public static boolean check_voters(String string) {
         if(string.length()<3){
             System.out.println("this in not a true command!");
@@ -118,7 +118,7 @@ public class Night {
         }
         return false;
     }
-
+//to do the act of doctor or detective or silencer we use this method
     public static void question_and_answer(String order) {
         String[] str = order.split(" ");
         Player responder = null;
@@ -146,7 +146,7 @@ public class Night {
             }
         }
     }
-
+//this method is used to save all the mafias votes and choose their last commands
     public static ArrayList<Player> getKickedOut(ArrayList<String> night_voters,Player[]players) {
      //   if (night_voters ==null) {
          //   return null;
@@ -179,14 +179,14 @@ public class Night {
         }
         return c;
     }
-
+//this method is used when we are printing the people who were gonna dye but not all
     public static void TriedToKill(ArrayList<Player>a,String nameofDead) {
         String str;
         if (a.size() != 0) {
             str = "mafia tried to kill ";
             for (int i = 0; i < a.size(); i++)
                 if (check_non_repeated_name(a, i))
-                    if(!(a.get(i)instanceof bulletproof && nameofDead==null ))
+                    if(!(a.get(i)instanceof bulletproof && nameofDead==null))
                     str += a.get(i).getName() + " ";
         } else {
             str = "noBody voted for someone last night";
@@ -195,7 +195,7 @@ public class Night {
             System.out.println(str);
         }
     }
-
+//this whole method gives the name of the dead person and kill it
     public static String ReportOFNightName(Player[] players, ArrayList<Player> IntentionalCase) {
         //IntentionalCase is an array list which have all the people who were voted
         String nameOfDeath = null;
@@ -243,7 +243,7 @@ public class Night {
         }
         return nameOfDeath;
     }
-
+//to print the person who is silence during the next day
     public static void IsSilence(Player[] players) {
         String str = "";
         for (int i = 0; i < players.length; i++) {
@@ -254,7 +254,7 @@ public class Night {
         if (!str.equals(""))
             System.out.println(str);
     }
-
+//after the night we put everything back to normal
     public static void AfterNight(Player[] players) {
         for (int i = 0; i < players.length; i++) {
             if (players[i] instanceof silencer) {
