@@ -55,4 +55,27 @@ public class informer extends Player{
             }
         }
     }
+    public static void whatToInformDay(Player[]players, Player informer){
+        System.out.println(informer.getName()+" was an informer");
+        Random rand = new Random();
+        while (true) {
+            int n = rand.nextInt(4);
+            if (n == 0) {
+                System.out.println("Number of alive mafia : " + Main.giveNumbersOFMafias(players));
+                break;
+            } else if (n == 1) {
+                String str = findJoker(players);
+                if (str!=null){
+                    System.out.println("There is a joker who’s name starts with " + str.charAt(0));
+                    break;
+                }
+            } else if (n == 2) {
+                String str = findAliveMafia(players);
+                if (str!=null){
+                    System.out.println("There is a mafia who’s name starts with " + str.charAt(0));
+                    break;
+                }
+            }
+        }
+    }
 }

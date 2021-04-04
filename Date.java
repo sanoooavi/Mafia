@@ -115,7 +115,7 @@ public class Date {
         } else if (goingToDie instanceof informer) {
             System.out.println(goingToDie.getName() + " was Killed");
             goingToDie.setIs_alive(false);
-            //   informer.whatToInform(players, goingToDie, a);
+               informer.whatToInformDay(players, goingToDie);
         } else {
             goingToDie.setIs_alive(false);
             System.out.println("\u001B[31m" + goingToDie.getName() + " " + "died" + "\u001B[0m");

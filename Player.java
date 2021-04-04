@@ -1,9 +1,9 @@
 public abstract class Player {
-    String name;
-    String act = null;
-    boolean is_alive = true;
-    boolean is_silence;
-    public int votes;
+    public String name;
+    public String act = null;
+    public boolean is_alive = true;
+    public boolean is_silence;
+    public  int votes;
     public int has_voted_atNight = 0;
     public int has_additional_life ;
 
