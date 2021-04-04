@@ -328,4 +328,4 @@ public class Main {
         }
     }
 }
-//https://github.com/sanoooavi/Mafia/commit/8d9aa66d45ae01aaedb7ac99bba6730f5e17134d;
+//https://github.com/sanoooavi/Mafia.git
